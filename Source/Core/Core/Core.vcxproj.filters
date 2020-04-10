@@ -731,6 +731,7 @@
     </ClCompile>
     <ClCompile Include="Analytics.cpp" />
     <ClCompile Include="LUA\Lua.cpp" />
+    <ClCompile Include="SharedMemoryInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BootManager.h" />
@@ -1251,6 +1252,7 @@
     </ClInclude>
     <ClInclude Include="Analytics.h" />
     <ClInclude Include="LUA\Lua.h" />
+    <ClInclude Include="SharedMemoryInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />

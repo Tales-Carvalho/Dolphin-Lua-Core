@@ -58,6 +58,8 @@
 #include "VideoCommon/VertexShaderManager.h"
 #include "VideoCommon/VideoConfig.h"
 
+#include "Core/SharedMemoryInterface.h"
+
 #include "DolphinWX/LaunchLuaScript.h" //ADDED
 
 int g_saveSlot = 1;
@@ -1267,6 +1269,7 @@ void CFrame::PollHotkeys(wxTimerEvent& event)
 	{
 		HotkeyManagerEmu::GetStatus();
 		ParseHotkeys();
+		SharedMemoryInterface::PollInterface(); // Memory Interface (THC98)
 	}
 }
 
@@ -1621,4 +1624,3 @@ void CFrame::HandleFrameSkipHotkeys()
 		holdFrameStepDelayCount = 0;
 	}
 }
-

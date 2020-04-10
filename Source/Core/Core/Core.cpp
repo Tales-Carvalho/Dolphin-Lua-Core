@@ -62,6 +62,8 @@
 #include "Core/PowerPC/JitInterface.h"
 #include "Core/PowerPC/PowerPC.h"
 
+#include "Core/SharedMemoryInterface.h" // THC98
+
 #ifdef USE_GDBSTUB
 #include "Core/PowerPC/GDBStub.h"
 #endif
@@ -490,6 +492,8 @@ void EmuThread()
 
 	Lua::Init(); // Dragonbane
 
+	SharedMemoryInterface::Init(); // THC98
+
 	HW::Init();
 
 	if (!g_video_backend->Initialize(s_window_handle))
@@ -680,6 +684,8 @@ void EmuThread()
 	PatchEngine::Shutdown();
 
 	Lua::Shutdown(); // Dragonbane
+
+	SharedMemoryInterface::Shutdown(); // THC98
 
 	s_is_stopping = false;
 

@@ -15,6 +15,7 @@
 #include "Core/HW/SI_Device.h"
 #include "Core/HW/SI_DeviceGCController.h"
 #include "Core/HW/SystemTimers.h"
+#include "Core/SharedMemoryInterface.h" // THC98
 #include "InputCommon/GCPadStatus.h"
 
 // --- standard GameCube controller ---
@@ -123,6 +124,8 @@ void CSIDevice_GCController::HandleMoviePadStatus(GCPadStatus* PadStatus)
 	
 	Lua::UpdateScripts(PadStatus);
 
+	SharedMemoryInterface::SetGCPadStatus(PadStatus); // THC98 - this is only triggered in certain conditions
+
 	Movie::SetPolledDevice();
 	if (NetPlay_GetInput(ISIDevice::m_iDeviceNumber, PadStatus))
 	{
@@ -141,6 +144,9 @@ void CSIDevice_GCController::HandleMoviePadStatus(GCPadStatus* PadStatus)
 	{
 		Movie::CheckPadStatus(PadStatus, ISIDevice::m_iDeviceNumber);
 	}
+
+	SharedMemoryInterface::GetGCPadStatus(PadStatus); // THC98
+	SharedMemoryInterface::PollInterface(); // Memory Interface (THC98)
 }
 
 GCPadStatus CSIDevice_GCController::GetPadStatus()
