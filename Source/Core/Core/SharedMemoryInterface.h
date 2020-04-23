@@ -42,19 +42,19 @@ namespace SharedMemoryInterface
 		u8 IsMoviePlayingBack = 0;				// If 1, Movie is playing back
 		u8 ReadOnly = 0;						// ReadOnly = 1; ReadWrite = 2
 		u8 InputActive = 0;						// If 1, input from ControllerInput is read
-		u8 NotImplemented = 0;					// Extra byte to align next variables in memory
+		u8 InputsInQueue = 0;					// Extra byte to align next variables in memory
 		u64 FrameCount = 0;
 		u64 InputFrameCount = 0;
-		u8 ControllerInput[8];					// Struct used to send inputs to Dolphin
+		u8 ControllerInputQueue[80];			// Struct used to send inputs to Dolphin
 		u8 ReadOnlyControllerInput[8];			// Struct used to read inputs from Dolphin
 		char StateName[32];						// Filename used by LoadState and SaveState functions
 	};
 
 	extern MInterface* m_interface;
 	extern HANDLE hMapFile;
+	extern u64 lastFrameCount;
 
 	void Init();
-	void InitStruct();
 	void GetGCPadStatus(GCPadStatus* gcPad);
 	void SetGCPadStatus(GCPadStatus* gcPad);
 	void PollInterface();

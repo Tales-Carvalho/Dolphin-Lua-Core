@@ -124,7 +124,7 @@ void CSIDevice_GCController::HandleMoviePadStatus(GCPadStatus* PadStatus)
 	
 	Lua::UpdateScripts(PadStatus);
 
-	SharedMemoryInterface::SetGCPadStatus(PadStatus); // THC98 - this is only triggered in certain conditions
+	SharedMemoryInterface::SetGCPadStatus(PadStatus); // THC98 - this is only triggered when MI has available inputs
 
 	Movie::SetPolledDevice();
 	if (NetPlay_GetInput(ISIDevice::m_iDeviceNumber, PadStatus))
@@ -146,7 +146,7 @@ void CSIDevice_GCController::HandleMoviePadStatus(GCPadStatus* PadStatus)
 	}
 
 	SharedMemoryInterface::GetGCPadStatus(PadStatus); // THC98
-	SharedMemoryInterface::PollInterface(); // Memory Interface (THC98)
+	//SharedMemoryInterface::PollInterface(); // Memory Interface (THC98)
 }
 
 GCPadStatus CSIDevice_GCController::GetPadStatus()

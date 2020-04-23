@@ -10,9 +10,12 @@ namespace SharedMemoryInterface
 {
 	MInterface* m_interface;
 	HANDLE hMapFile;
+	u64 lastFrameCount;
 
 	void Init() 
 	{
+		lastFrameCount = 0;
+
 		hMapFile = CreateFileMapping(
 			INVALID_HANDLE_VALUE,    // use paging file
 			NULL,                    // default security
@@ -43,13 +46,6 @@ namespace SharedMemoryInterface
 
 			return;
 		}
-
-		InitStruct();
-	}
-
-	void InitStruct()
-	{
-
 	}
 
 	void GetGCPadStatus(GCPadStatus* gcPad)
@@ -66,18 +62,33 @@ namespace SharedMemoryInterface
 
 	void SetGCPadStatus(GCPadStatus* gcPad)
 	{
-		if (m_interface->InputActive != 1 || Movie::IsPlayingInput())
+		if (m_interface->InputActive != 1 || m_interface->InputsInQueue == 0 || Movie::IsPlayingInput())
 		{
 			return;
 		}
 
-		gcPad->button = m_interface->ControllerInput[0] | (m_interface->ControllerInput[1] << 8);
-		gcPad->stickX = m_interface->ControllerInput[2];
-		gcPad->stickY = m_interface->ControllerInput[3];
-		gcPad->substickX = m_interface->ControllerInput[4];
-		gcPad->substickY = m_interface->ControllerInput[5];
-		gcPad->triggerLeft = m_interface->ControllerInput[6];
-		gcPad->triggerRight = m_interface->ControllerInput[7];
+		// Execute the first input in queue
+		gcPad->button = m_interface->ControllerInputQueue[0] | (m_interface->ControllerInputQueue[1] << 8);
+		gcPad->stickX = m_interface->ControllerInputQueue[2];
+		gcPad->stickY = m_interface->ControllerInputQueue[3];
+		gcPad->substickX = m_interface->ControllerInputQueue[4];
+		gcPad->substickY = m_interface->ControllerInputQueue[5];
+		gcPad->triggerLeft = m_interface->ControllerInputQueue[6];
+		gcPad->triggerRight = m_interface->ControllerInputQueue[7];
+
+		// Shift the queue if frame advanced
+		if (lastFrameCount != Movie::g_currentFrame)
+		{
+			lastFrameCount = Movie::g_currentFrame;
+			for (u8 i = 0; i < 9; i++)
+			{
+				for (u8 j = 0; j < 8; j++)
+				{
+					m_interface->ControllerInputQueue[8 * i + j] = m_interface->ControllerInputQueue[8 * (i + 1) + j];
+				}
+			}
+			m_interface->InputsInQueue--;
+		}
 	}
 
 	void PollInterface()
